@@ -76,16 +76,17 @@ export default function SidebarNavigation() {
           </Link>
         </nav>
 
-        <div className="mt-12 pb-6">
-          <div className="rounded-xl bg-slate-50 p-4 border border-slate-200">
-            <p className="text-sm font-medium text-slate-900 mb-1">Ready to save lives?</p>
-            <p className="text-xs text-slate-500 mb-3">Register as a donor today</p>
-            <Link
-              href="/donors"
-              className="block w-full py-2 text-center rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
-            >
-              Donate Now
-            </Link>
+          <div className="mt-12 pb-6">
+            <div className="rounded-xl bg-slate-50 p-4 border border-slate-200">
+              <p className="text-sm font-medium text-slate-900 mb-1">Ready to save lives?</p>
+              <p className="text-xs text-slate-500 mb-3">Register as a donor today</p>
+              <Link
+                href="/donors"
+                className="block w-full py-2 text-center rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
+              >
+                Donate Now
+              </Link>
+            </div>
           </div>
         </div>
       </aside>
