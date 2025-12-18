@@ -4,6 +4,8 @@ import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import ErrorReporter from "@/components/ErrorReporter";
 import Script from "next/script";
+import SidebarNavigation from "@/components/sections/sidebar-navigation";
+import FloatingChatButton from "@/components/sections/floating-chat-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950`}
       >
         <Script
           id="orchids-browser-logs"
@@ -47,7 +49,9 @@ export default function RootLayout({
           data-debug="true"
           data-custom-data='{"appName": "YourApp", "version": "1.0.0", "greeting": "hi"}'
         />
+        <SidebarNavigation />
         {children}
+        <FloatingChatButton />
         <VisualEditsMessenger />
       </body>
     </html>
