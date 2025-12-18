@@ -84,119 +84,119 @@ export default function QueuePage() {
     }
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'waiting': return 'bg-yellow-500/20 text-yellow-400'
-      case 'in_progress': return 'bg-blue-500/20 text-blue-400'
-      case 'completed': return 'bg-green-500/20 text-green-400'
-      default: return 'bg-slate-500/20 text-slate-400'
+    const getStatusColor = (status: string) => {
+      switch (status) {
+        case 'waiting': return 'bg-yellow-50 text-yellow-600 border-yellow-200'
+        case 'in_progress': return 'bg-blue-50 text-blue-600 border-blue-200'
+        case 'completed': return 'bg-green-50 text-green-600 border-green-200'
+        default: return 'bg-slate-50 text-slate-600 border-slate-200'
+      }
     }
-  }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-red-950/20 to-slate-950 pl-72 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Hospital Queue</h1>
-          <p className="text-slate-400">Manage and track donor appointments at blood banks</p>
-        </div>
+    return (
+      <div className="min-h-screen bg-white pl-72 p-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-slate-900 mb-2">Hospital Queue</h1>
+            <p className="text-slate-600">Manage and track donor appointments at blood banks</p>
+          </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
-            <div className="text-3xl font-bold text-white">{stats.total}</div>
-            <div className="text-slate-400">Total Today</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+              <div className="text-3xl font-bold text-slate-900">{stats.total}</div>
+              <div className="text-slate-500 text-sm">Total Today</div>
+            </div>
+            <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
+              <div className="text-3xl font-bold text-yellow-600">{stats.waiting}</div>
+              <div className="text-yellow-600/70 text-sm font-medium">Waiting</div>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+              <div className="text-3xl font-bold text-blue-600">{stats.in_progress}</div>
+              <div className="text-blue-600/70 text-sm font-medium">In Progress</div>
+            </div>
+            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+              <div className="text-3xl font-bold text-green-600">{stats.completed}</div>
+              <div className="text-green-600/70 text-sm font-medium">Completed</div>
+            </div>
           </div>
-          <div className="bg-yellow-500/10 rounded-xl p-4 border border-yellow-500/30">
-            <div className="text-3xl font-bold text-yellow-400">{stats.waiting}</div>
-            <div className="text-yellow-400/70">Waiting</div>
-          </div>
-          <div className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/30">
-            <div className="text-3xl font-bold text-blue-400">{stats.in_progress}</div>
-            <div className="text-blue-400/70">In Progress</div>
-          </div>
-          <div className="bg-green-500/10 rounded-xl p-4 border border-green-500/30">
-            <div className="text-3xl font-bold text-green-400">{stats.completed}</div>
-            <div className="text-green-400/70">Completed</div>
-          </div>
-        </div>
 
-        <div className="bg-slate-900/80 backdrop-blur rounded-2xl p-6 border border-slate-800 mb-6">
-          <div className="flex flex-wrap gap-4">
-            <select
-              value={selectedHospital}
-              onChange={e => setSelectedHospital(e.target.value)}
-              className="px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:border-red-500 outline-none min-w-[200px]"
-            >
-              <option value="">All Hospitals</option>
-              {hospitals.map(h => (
-                <option key={h.id} value={h.id}>{h.name} - {h.city}</option>
-              ))}
-            </select>
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 mb-6 shadow-sm">
+            <div className="flex flex-wrap gap-4">
+              <select
+                value={selectedHospital}
+                onChange={e => setSelectedHospital(e.target.value)}
+                className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 outline-none min-w-[200px] transition-colors"
+              >
+                <option value="">All Hospitals</option>
+                {hospitals.map(h => (
+                  <option key={h.id} value={h.id}>{h.name} - {h.city}</option>
+                ))}
+              </select>
 
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={e => setSelectedDate(e.target.value)}
-              className="px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:border-red-500 outline-none"
-            />
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={e => setSelectedDate(e.target.value)}
+                className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 outline-none transition-colors"
+              />
+            </div>
           </div>
-        </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-pulse text-red-400">Loading queue...</div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {queue.map(entry => (
-              <div key={entry.id} className="bg-slate-900/80 backdrop-blur rounded-xl p-6 border border-slate-800 flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-xl bg-red-500/20 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-red-400">#{entry.queue_number}</span>
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-pulse text-red-500">Loading queue...</div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {queue.map(entry => (
+                <div key={entry.id} className="bg-white rounded-xl p-6 border border-slate-200 flex items-center justify-between shadow-sm hover:border-slate-300 transition-all">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-xl bg-red-50 flex items-center justify-center border border-red-100">
+                      <span className="text-2xl font-bold text-red-600">#{entry.queue_number}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">{entry.users?.full_name || 'Unknown'}</h3>
+                      <p className="text-slate-600 text-sm">
+                        {entry.users?.blood_type} • {entry.hospitals?.name}
+                      </p>
+                      {entry.appointment_time && (
+                        <p className="text-slate-500 text-xs mt-1">Scheduled: {entry.appointment_time}</p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">{entry.users?.full_name || 'Unknown'}</h3>
-                    <p className="text-slate-400 text-sm">
-                      {entry.users?.blood_type} • {entry.hospitals?.name}
-                    </p>
-                    {entry.appointment_time && (
-                      <p className="text-slate-500 text-sm">Scheduled: {entry.appointment_time}</p>
+
+                  <div className="flex items-center gap-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(entry.status)}`}>
+                      {entry.status.replace('_', ' ').toUpperCase()}
+                    </span>
+
+                    {entry.status === 'waiting' && (
+                      <button
+                        onClick={() => updateStatus(entry.id, 'in_progress')}
+                        className="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm"
+                      >
+                        Start
+                      </button>
+                    )}
+                    {entry.status === 'in_progress' && (
+                      <button
+                        onClick={() => updateStatus(entry.id, 'completed')}
+                        className="px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition-colors shadow-sm"
+                      >
+                        Complete
+                      </button>
                     )}
                   </div>
                 </div>
-
-                <div className="flex items-center gap-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(entry.status)}`}>
-                    {entry.status.replace('_', ' ').toUpperCase()}
-                  </span>
-
-                  {entry.status === 'waiting' && (
-                    <button
-                      onClick={() => updateStatus(entry.id, 'in_progress')}
-                      className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
-                    >
-                      Start
-                    </button>
-                  )}
-                  {entry.status === 'in_progress' && (
-                    <button
-                      onClick={() => updateStatus(entry.id, 'completed')}
-                      className="px-4 py-2 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
-                    >
-                      Complete
-                    </button>
-                  )}
+              ))}
+              {queue.length === 0 && (
+                <div className="text-center py-20 text-slate-400 border-2 border-dashed border-slate-100 rounded-2xl">
+                  No appointments for this date
                 </div>
-              </div>
-            ))}
-            {queue.length === 0 && (
-              <div className="text-center py-20 text-slate-500">
-                No appointments for this date
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
