@@ -67,8 +67,8 @@ export default function DashboardPage() {
   const pieData = inventoryData.map(d => ({ name: d.type, value: d.units }))
 
   return (
-    <div className="min-h-screen bg-white pl-72 p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-white pl-72 p-8 overflow-y-auto">
+      <div className="max-w-7xl mx-auto pb-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Impact Dashboard</h1>
           <p className="text-slate-500">Real-time blood donation statistics and analytics</p>
