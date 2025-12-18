@@ -30,8 +30,8 @@ export default function SidebarNavigation() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-slate-200 bg-white flex flex-col">
-      <div className="flex-1 overflow-y-auto p-4 pt-6">
+      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-slate-200 bg-white overflow-y-auto">
+        <div className="p-4 pt-6">
         <Link href="/dashboard" className="flex flex-col items-center justify-center pb-6">
           <div className="flex size-12 items-center justify-center rounded-full bg-red-50">
             <Heart className="size-6 text-red-500" />
