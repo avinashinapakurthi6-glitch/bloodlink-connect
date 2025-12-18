@@ -1,138 +1,92 @@
+"use client"
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Heart,
   LayoutDashboard,
   AlertCircle,
-  Bell,
   Users,
   Package,
   Clock,
   CheckCircle2,
-  FileText,
   Award,
-  MapPin,
-  WifiOff,
-  AlertTriangle,
   Calendar,
   UserCircle,
 } from 'lucide-react';
 
+const navItems = [
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Impact Dashboard' },
+  { href: '/emergency', icon: AlertCircle, label: 'Emergency SOS' },
+  { href: '/donors', icon: Users, label: 'Donor Matching' },
+  { href: '/inventory', icon: Package, label: 'Blood Bank Inventory' },
+  { href: '/queue', icon: Clock, label: 'Hospital Queue' },
+  { href: '/eligibility', icon: CheckCircle2, label: 'Health Eligibility' },
+  { href: '/certificates', icon: Award, label: 'Donation Certificates' },
+  { href: '/events', icon: Calendar, label: 'Donation Events' },
+];
+
 export default function SidebarNavigation() {
+  const pathname = usePathname();
+
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-48 border-r border-sidebar-border bg-sidebar p-4 pt-6">
-      <div className="flex flex-col items-center justify-center pb-6">
-        <div className="flex size-10 items-center justify-center rounded-full bg-red-light-background">
-          <Heart className="size-5 text-primary" />
+    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-slate-800 bg-slate-950 p-4 pt-6">
+      <Link href="/dashboard" className="flex flex-col items-center justify-center pb-6">
+        <div className="flex size-12 items-center justify-center rounded-full bg-red-500/20">
+          <Heart className="size-6 text-red-500" />
         </div>
-        <div className="mt-2 text-base font-semibold text-sidebar-foreground">BloodLink</div>
-        <p className="mt-0.5 text-xs text-text-secondary">Save Lives Together</p>
-      </div>
+        <div className="mt-2 text-lg font-bold text-white">BloodLink</div>
+        <p className="mt-0.5 text-xs text-slate-500">Save Lives Together</p>
+      </Link>
 
       <nav className="flex flex-col gap-1">
-        <h4 className="mb-2 mt-5 text-xs font-semibold text-text-secondary">Features</h4>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <LayoutDashboard className="size-4" />
-          Impact Dashboard
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <AlertCircle className="size-4" />
-          Respond to Emergencies
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <Bell className="size-4" />
-          Emergency SOS
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <Users className="size-4" />
-          Donor Matching
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <Package className="size-4" />
-          Blood Bank Inventory
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <Clock className="size-4" />
-          Hospital Queue
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <CheckCircle2 className="size-4" />
-          Health Eligibility
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <FileText className="size-4" />
-          AI Medical Report Check
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <Award className="size-4" />
-          Donation Certificates
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <MapPin className="size-4" />
-          Map Tracking
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <WifiOff className="size-4" />
-          Offline Mode
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <AlertTriangle className="size-4" />
-          Shortage Alerts
-        </Link>
-        <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
-        >
-          <Calendar className="size-4" />
-          Donation Events
-        </Link>
+        <h4 className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-slate-500">Features</h4>
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+                isActive
+                  ? 'bg-red-500/20 text-red-400'
+                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+              }`}
+            >
+              <item.icon className={`size-5 ${isActive ? 'text-red-400' : ''}`} />
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
 
       <nav className="mt-8 flex flex-col gap-1">
-        <h4 className="mb-2 text-xs font-semibold text-text-secondary">Quick Actions</h4>
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Quick Actions</h4>
         <Link
-          href="#"
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-normal text-sidebar-foreground transition-colors hover:bg-muted"
+          href="/profile"
+          className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+            pathname === '/profile'
+              ? 'bg-red-500/20 text-red-400'
+              : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+          }`}
         >
-          <UserCircle className="size-4" />
+          <UserCircle className={`size-5 ${pathname === '/profile' ? 'text-red-400' : ''}`} />
           Donor Profile
         </Link>
       </nav>
+
+      <div className="absolute bottom-6 left-4 right-4">
+        <div className="rounded-xl bg-gradient-to-r from-red-500/20 to-pink-500/20 p-4 border border-red-500/30">
+          <p className="text-sm font-medium text-white mb-1">Ready to save lives?</p>
+          <p className="text-xs text-slate-400 mb-3">Register as a donor today</p>
+          <Link
+            href="/emergency"
+            className="block w-full py-2 text-center rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
+          >
+            Donate Now
+          </Link>
+        </div>
+      </div>
     </aside>
   );
 }
