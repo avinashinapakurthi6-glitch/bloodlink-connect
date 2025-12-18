@@ -170,41 +170,41 @@ export default function DonorsPage() {
 
 function DonorCard({ donor }: { donor: Donor }) {
   return (
-    <div className="bg-slate-900/80 backdrop-blur rounded-2xl p-6 border border-slate-800 hover:border-red-500/50 transition-all hover:shadow-lg hover:shadow-red-500/10">
+    <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-red-500/50 transition-all hover:shadow-lg hover:shadow-red-500/5">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-white">{donor.full_name}</h3>
-          <p className="text-slate-400 text-sm">{donor.city}</p>
+          <h3 className="text-lg font-semibold text-slate-900">{donor.full_name}</h3>
+          <p className="text-slate-500 text-sm">{donor.city}</p>
         </div>
         <span 
           className="px-3 py-1 rounded-full text-sm font-bold"
-          style={{ backgroundColor: `${BLOOD_COLORS[donor.blood_type]}20`, color: BLOOD_COLORS[donor.blood_type] }}
+          style={{ backgroundColor: `${BLOOD_COLORS[donor.blood_type]}10`, color: BLOOD_COLORS[donor.blood_type] }}
         >
           {donor.blood_type}
         </span>
       </div>
 
       <div className="space-y-2 text-sm">
-        <div className="flex items-center justify-between text-slate-400">
+        <div className="flex items-center justify-between text-slate-600">
           <span>Total Donations</span>
-          <span className="text-white font-medium">{donor.total_donations}</span>
+          <span className="text-slate-900 font-medium">{donor.total_donations}</span>
         </div>
         {donor.distance_km !== undefined && (
-          <div className="flex items-center justify-between text-slate-400">
+          <div className="flex items-center justify-between text-slate-600">
             <span>Distance</span>
-            <span className="text-white font-medium">{donor.distance_km.toFixed(1)} km</span>
+            <span className="text-slate-900 font-medium">{donor.distance_km.toFixed(1)} km</span>
           </div>
         )}
-        <div className="flex items-center justify-between text-slate-400">
+        <div className="flex items-center justify-between text-slate-600">
           <span>Status</span>
-          <span className={`font-medium ${donor.is_available ? 'text-green-400' : 'text-yellow-400'}`}>
+          <span className={`font-medium ${donor.is_available ? 'text-green-600' : 'text-yellow-600'}`}>
             {donor.is_available ? 'Available' : 'Not Available'}
           </span>
         </div>
       </div>
 
       {donor.is_available && (
-        <button className="mt-4 w-full py-2 rounded-xl bg-red-500/20 text-red-400 font-medium hover:bg-red-500/30 transition-colors">
+        <button className="mt-4 w-full py-2 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition-colors">
           Contact Donor
         </button>
       )}
