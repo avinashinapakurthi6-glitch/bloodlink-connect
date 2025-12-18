@@ -101,9 +101,66 @@ export default function DonorsPage() {
     }
   }
 
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setRegistering(true)
+    setRegisterError('')
+    setRegisterSuccess(false)
+
+    if (!formData.full_name || !formData.email || !formData.blood_type || !formData.phone || !formData.city) {
+      setRegisterError('Please fill in all required fields')
+      setRegistering(false)
+      return
+    }
+
+    try {
+      const res = await fetch('/api/donors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          is_donor: true,
+          is_available: true,
+          total_donations: 0
+        })
+      })
+      
+      const data = await res.json()
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to register')
+      }
+      
+      setRegisterSuccess(true)
+      setFormData({
+        full_name: '',
+        email: '',
+        phone: '',
+        blood_type: '',
+        date_of_birth: '',
+        gender: '',
+        city: '',
+        address: ''
+      })
+      setTimeout(() => {
+        setMode('list')
+        fetchDonors()
+      }, 2000)
+    } catch (error) {
+      console.error('Registration error:', error)
+      setRegisterError(error instanceof Error ? error.message : 'Failed to register. Please try again.')
+    } finally {
+      setRegistering(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
   return (
-    <div className="min-h-screen bg-white pl-72 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white pl-72 p-8 overflow-y-auto">
+      <div className="max-w-6xl mx-auto pb-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Donor Network</h1>
           <p className="text-slate-600">Find and match blood donors in your area</p>
@@ -121,6 +178,12 @@ export default function DonorsPage() {
             className={`px-6 py-3 rounded-xl font-medium transition-all ${mode === 'match' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
           >
             Find Match
+          </button>
+          <button
+            onClick={() => setMode('register')}
+            className={`px-6 py-3 rounded-xl font-medium transition-all ${mode === 'register' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+          >
+            Register as Donor
           </button>
         </div>
 
