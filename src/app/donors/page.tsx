@@ -26,13 +26,37 @@ interface MatchResult {
   compatible_types: string[]
 }
 
+interface RegisterForm {
+  full_name: string
+  email: string
+  phone: string
+  blood_type: string
+  date_of_birth: string
+  gender: string
+  city: string
+  address: string
+}
+
 export default function DonorsPage() {
-  const [mode, setMode] = useState<'list' | 'match'>('list')
+  const [mode, setMode] = useState<'list' | 'match' | 'register'>('list')
   const [donors, setDonors] = useState<Donor[]>([])
   const [matchResult, setMatchResult] = useState<MatchResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [searchBloodType, setSearchBloodType] = useState('')
   const [searchCity, setSearchCity] = useState('')
+  const [registering, setRegistering] = useState(false)
+  const [registerSuccess, setRegisterSuccess] = useState(false)
+  const [registerError, setRegisterError] = useState('')
+  const [formData, setFormData] = useState<RegisterForm>({
+    full_name: '',
+    email: '',
+    phone: '',
+    blood_type: '',
+    date_of_birth: '',
+    gender: '',
+    city: '',
+    address: ''
+  })
 
   useEffect(() => {
     if (mode === 'list') {
