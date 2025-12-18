@@ -60,10 +60,10 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white pl-72 p-8">
+    <div className="min-h-screen bg-white pl-72 p-8 text-slate-900">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Blood Bank Inventory</h1>
+          <h1 className="text-4xl font-bold mb-2">Blood Bank Inventory</h1>
           <p className="text-slate-600">Real-time blood stock levels across all partner hospitals</p>
         </div>
 
@@ -80,7 +80,7 @@ export default function InventoryPage() {
               >
                 {type}
               </div>
-              <div className="text-slate-900 font-semibold">{data.total} units</div>
+              <div className="font-semibold">{data.total} units</div>
               <div className="text-slate-500 text-xs">{data.hospitals} hospitals</div>
             </button>
           ))}
@@ -88,7 +88,7 @@ export default function InventoryPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-pulse text-red-500">Loading inventory...</div>
+            <div className="animate-pulse text-red-500 font-medium">Loading inventory...</div>
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -107,7 +107,7 @@ export default function InventoryPage() {
                 {inventory.map(item => (
                   <tr key={item.id} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
                     <td className="py-4 px-6">
-                      <div className="text-slate-900 font-medium">{item.hospitals?.name || 'Unknown'}</div>
+                      <div className="font-medium">{item.hospitals?.name || 'Unknown'}</div>
                       <div className="text-slate-500 text-sm">{item.hospitals?.city}</div>
                     </td>
                     <td className="py-4 px-6">
@@ -118,7 +118,7 @@ export default function InventoryPage() {
                         {item.blood_type}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-slate-900 font-semibold">{item.units_available}</td>
+                    <td className="py-4 px-6 font-semibold">{item.units_available}</td>
                     <td className="py-4 px-6 text-slate-500">{item.units_reserved}</td>
                     <td className="py-4 px-6">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(item.units_available)}`}>
