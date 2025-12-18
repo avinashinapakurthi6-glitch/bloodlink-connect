@@ -81,7 +81,7 @@ export default function SidebarNavigation() {
             <p className="text-sm font-medium text-slate-900 mb-1">Ready to save lives?</p>
             <p className="text-xs text-slate-500 mb-3">Register as a donor today</p>
             <Link
-              href="/emergency"
+              href="/donors"
               className="block w-full py-2 text-center rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
             >
               Donate Now
