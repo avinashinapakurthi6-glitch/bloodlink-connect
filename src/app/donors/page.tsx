@@ -233,7 +233,136 @@ export default function DonorsPage() {
           )}
         </div>
 
-        {loading ? (
+        {mode === 'register' ? (
+          <div className="bg-white rounded-2xl p-8 border border-slate-200 max-w-2xl">
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">Register as a Blood Donor</h2>
+            
+            {registerSuccess && (
+              <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700">
+                Registration successful! Thank you for becoming a donor.
+              </div>
+            )}
+            
+            {registerError && (
+              <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700">
+                {registerError}
+              </div>
+            )}
+            
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
+                  <input
+                    type="text"
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Email *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                    placeholder="Enter your email"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Phone *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Blood Type *</label>
+                  <select
+                    name="blood_type"
+                    value={formData.blood_type}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                  >
+                    <option value="">Select blood type</option>
+                    {BLOOD_TYPES.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Date of Birth</label>
+                  <input
+                    type="date"
+                    name="date_of_birth"
+                    value={formData.date_of_birth}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Gender</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">City *</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                    placeholder="Enter your city"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Address</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                    placeholder="Enter your address"
+                  />
+                </div>
+              </div>
+              
+              <button
+                type="submit"
+                disabled={registering}
+                className="w-full py-4 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {registering ? 'Registering...' : 'Register as Donor'}
+              </button>
+            </form>
+          </div>
+        ) : loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-pulse text-red-500">Loading donors...</div>
           </div>
@@ -251,7 +380,6 @@ export default function DonorsPage() {
         )}
       </div>
     </div>
-
   )
 }
 
