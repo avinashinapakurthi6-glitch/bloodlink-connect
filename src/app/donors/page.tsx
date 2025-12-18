@@ -78,34 +78,34 @@ export default function DonorsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-red-950/20 to-slate-950 pl-72 p-8">
+    <div className="min-h-screen bg-white pl-72 p-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Donor Network</h1>
-          <p className="text-slate-400">Find and match blood donors in your area</p>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Donor Network</h1>
+          <p className="text-slate-600">Find and match blood donors in your area</p>
         </div>
 
         <div className="flex gap-4 mb-6">
           <button
             onClick={() => setMode('list')}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${mode === 'list' ? 'bg-red-500 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+            className={`px-6 py-3 rounded-xl font-medium transition-all ${mode === 'list' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
           >
             All Donors
           </button>
           <button
             onClick={() => setMode('match')}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${mode === 'match' ? 'bg-red-500 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+            className={`px-6 py-3 rounded-xl font-medium transition-all ${mode === 'match' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
           >
             Find Match
           </button>
         </div>
 
-        <div className="bg-slate-900/80 backdrop-blur rounded-2xl p-6 border border-slate-800 mb-6">
+        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-6">
           <div className="flex flex-wrap gap-4">
             <select
               value={searchBloodType}
               onChange={e => setSearchBloodType(e.target.value)}
-              className="px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:border-red-500 outline-none"
+              className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none"
             >
               <option value="">All Blood Types</option>
               {BLOOD_TYPES.map(type => (
@@ -119,7 +119,7 @@ export default function DonorsPage() {
                 placeholder="Filter by city..."
                 value={searchCity}
                 onChange={e => setSearchCity(e.target.value)}
-                className="px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:border-red-500 outline-none flex-1 min-w-[200px]"
+                className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none flex-1 min-w-[200px]"
               />
             )}
 
@@ -135,9 +135,9 @@ export default function DonorsPage() {
           </div>
 
           {mode === 'match' && matchResult && (
-            <div className="mt-4 p-4 rounded-xl bg-slate-800/50 border border-slate-700">
-              <p className="text-slate-300">
-                Found <span className="text-red-400 font-bold">{matchResult.total}</span> compatible donors for {searchBloodType}
+            <div className="mt-4 p-4 rounded-xl bg-white border border-slate-200">
+              <p className="text-slate-700">
+                Found <span className="text-red-500 font-bold">{matchResult.total}</span> compatible donors for {searchBloodType}
               </p>
               <p className="text-sm text-slate-500 mt-1">
                 Compatible types: {matchResult.compatible_types.join(', ')}
@@ -148,7 +148,7 @@ export default function DonorsPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-pulse text-red-400">Loading donors...</div>
+            <div className="animate-pulse text-red-500">Loading donors...</div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -164,6 +164,7 @@ export default function DonorsPage() {
         )}
       </div>
     </div>
+
   )
 }
 
