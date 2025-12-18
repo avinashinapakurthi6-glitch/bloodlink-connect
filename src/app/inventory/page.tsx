@@ -47,15 +47,6 @@ export default function InventoryPage() {
     }
   }
 
-    return (
-      <div className="min-h-screen bg-white pl-72 p-8">
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-pulse text-red-500">Loading inventory...</div>
-        </div>
-      </div>
-    )
-  }
-
   const getStatusColor = (units: number) => {
     if (units < 10) return 'text-red-600 bg-red-50'
     if (units < 25) return 'text-yellow-600 bg-yellow-50'
