@@ -88,7 +88,6 @@ export default function SidebarNavigation() {
             </Link>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
   );
 }
