@@ -60,8 +60,8 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white pl-72 p-8 text-slate-900">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white pl-72 p-8 text-slate-900 overflow-y-auto">
+      <div className="max-w-6xl mx-auto pb-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Blood Bank Inventory</h1>
           <p className="text-slate-600">Real-time blood stock levels across all partner hospitals</p>
