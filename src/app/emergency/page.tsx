@@ -59,8 +59,8 @@ export default function EmergencyPage() {
     }
   }
 
-    return (
-      <div className="min-h-screen bg-white pl-72 p-8">
+      return (
+        <div className="h-screen bg-white pl-72 p-8 overflow-y-auto">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-50 mb-4 animate-pulse">
