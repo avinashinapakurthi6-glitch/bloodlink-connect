@@ -50,8 +50,8 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white pl-72 p-8">
-        <div className="flex items-center justify-center h-64">
+      <div className="h-screen bg-white pl-72 p-8">
+        <div className="flex items-center justify-center h-full">
           <div className="animate-pulse text-red-500 text-xl">Loading dashboard...</div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export default function DashboardPage() {
   const pieData = inventoryData.map(d => ({ name: d.type, value: d.units }))
 
   return (
-    <div className="min-h-screen bg-white pl-72 p-8 overflow-y-auto">
+    <div className="h-screen bg-white pl-72 p-8 overflow-y-auto">
       <div className="max-w-7xl mx-auto pb-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Impact Dashboard</h1>
