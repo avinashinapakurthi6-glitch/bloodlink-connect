@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
       }
     }
   },
-  allowedDevOrigins: ['*.orchids.page'],
+    allowedDevOrigins: ['*.orchids.page', '*.proxy.daytona.works', 'localhost:3000'],
 } as NextConfig;
 
 export default nextConfig;
