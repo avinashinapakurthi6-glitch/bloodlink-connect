@@ -53,6 +53,7 @@ export default function RootLayout({
         <SidebarNavigation />
         {children}
         <FloatingChatButton />
+        <Toaster />
         <VisualEditsMessenger />
       </body>
     </html>
