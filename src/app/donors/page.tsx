@@ -375,18 +375,39 @@ export default function DonorsPage() {
                   />
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Address</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                    placeholder="Enter your address"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                      placeholder="Enter your address"
+                    />
+                  </div>
                 </div>
-              </div>
+
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${formData.latitude ? 'bg-green-500' : 'bg-slate-300'}`} />
+                    <span className="text-sm text-slate-600">
+                      {formData.latitude 
+                        ? `Coordinates captured: ${formData.latitude.toFixed(4)}, ${formData.longitude?.toFixed(4)}`
+                        : 'Capture your precise location for easier discovery'
+                      }
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={captureLocation}
+                    disabled={locationCapturing}
+                    className="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
+                  >
+                    {locationCapturing ? 'Capturing...' : formData.latitude ? 'Update Location' : 'Use My Location'}
+                  </button>
+                </div>
+
               
               <button
                 type="submit"
