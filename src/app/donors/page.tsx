@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import DonorMap from '@/components/DonorMap'
+import { PlaceAutocomplete } from '@/components/PlaceAutocomplete'
 
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 const BLOOD_COLORS: Record<string, string> = {
@@ -49,6 +50,7 @@ export default function DonorsPage() {
   const [loading, setLoading] = useState(true)
   const [searchBloodType, setSearchBloodType] = useState('')
   const [searchCity, setSearchCity] = useState('')
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | undefined>()
   const [registering, setRegistering] = useState(false)
   const [locationCapturing, setLocationCapturing] = useState(false)
   const [registerSuccess, setRegisterSuccess] = useState(false)
@@ -89,13 +91,7 @@ export default function DonorsPage() {
     )
   }
 
-  useEffect(() => {
-    if (mode === 'list') {
-      fetchDonors()
-    }
-  }, [mode, searchBloodType, searchCity])
-
-  const fetchDonors = async () => {
+  const fetchDonors = useCallback(async () => {
     setLoading(true)
     const params = new URLSearchParams()
     if (searchBloodType) params.append('blood_type', searchBloodType)
@@ -111,7 +107,13 @@ export default function DonorsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [searchBloodType, searchCity])
+
+  useEffect(() => {
+    if (mode === 'list') {
+      fetchDonors()
+    }
+  }, [mode, fetchDonors])
 
   const findMatches = async () => {
     if (!searchBloodType) return
@@ -129,6 +131,22 @@ export default function DonorsPage() {
       console.error('Failed to find matches:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handlePlaceSelect = (place: google.maps.places.PlaceResult | null) => {
+    if (place?.geometry?.location) {
+      const lat = place.geometry.location.lat()
+      const lng = place.geometry.location.lng()
+      setMapCenter({ lat, lng })
+      
+      // Optionally extract city from address components
+      const cityComponent = place.address_components?.find(c => 
+        c.types.includes('locality') || c.types.includes('administrative_area_level_2')
+      )
+      if (cityComponent) {
+        setSearchCity(cityComponent.long_name)
+      }
     }
   }
 
@@ -223,7 +241,7 @@ export default function DonorsPage() {
               <select
                 value={searchBloodType}
                 onChange={e => setSearchBloodType(e.target.value)}
-                className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none"
+                className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none w-48"
               >
                 <option value="">All Blood Types</option>
                 {BLOOD_TYPES.map(type => (
@@ -232,13 +250,16 @@ export default function DonorsPage() {
               </select>
 
               {mode === 'list' && (
-                <input
-                  type="text"
-                  placeholder="Filter by city..."
-                  value={searchCity}
-                  onChange={e => setSearchCity(e.target.value)}
-                  className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none flex-1 min-w-[200px]"
-                />
+                <>
+                  <PlaceAutocomplete onPlaceSelect={handlePlaceSelect} />
+                  <input
+                    type="text"
+                    placeholder="Filter by city..."
+                    value={searchCity}
+                    onChange={e => setSearchCity(e.target.value)}
+                    className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none w-48"
+                  />
+                </>
               )}
 
               {mode === 'match' && (
@@ -265,7 +286,10 @@ export default function DonorsPage() {
           </div>
 
           {mode !== 'register' && (
-            <DonorMap donors={mode === 'match' ? (matchResult?.matches || []) : donors} />
+            <DonorMap 
+              donors={mode === 'match' ? (matchResult?.matches || []) : donors} 
+              center={mapCenter}
+            />
           )}
 
           {mode === 'register' ? (
