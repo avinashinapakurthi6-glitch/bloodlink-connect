@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 1. Create a notification for the donor
-    const { error: notificationError } = await supabase
+    const { error: notificationError } = await supabaseAdmin
       .from('notifications')
       .insert({
         user_id: donor_id,
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // 2. If it's linked to a specific request, update donor_matches
     if (request_id) {
-      const { error: matchError } = await supabase
+      const { error: matchError } = await supabaseAdmin
         .from('donor_matches')
         .upsert({
           request_id,
