@@ -67,6 +67,7 @@ export default function ProfilePage() {
 
   const fetchData = useCallback(async () => {
     try {
+      setLoading(true)
       const res = await fetch('/api/profile')
       const data = await res.json()
 
@@ -74,7 +75,6 @@ export default function ProfilePage() {
         setAuthUser(null)
         setProfile(null)
         setShowSetup(false)
-        setLoading(false)
         return
       }
 
@@ -94,7 +94,6 @@ export default function ProfilePage() {
         })
         setShowSetup(false)
 
-        // Fetch donations in parallel if profile exists
         fetch('/api/donations?donor_id=' + data.profile.id)
           .then(res => res.json())
           .then(data => setDonations(data.donations || []))
@@ -137,6 +136,7 @@ export default function ProfilePage() {
     setAuthUser(null)
     setProfile(null)
     setShowSetup(false)
+    window.location.reload()
   }
 
   const handleSave = async () => {
@@ -153,6 +153,7 @@ export default function ProfilePage() {
         setProfile(data.profile)
         setEditing(false)
         setShowSetup(false)
+        fetchData()
       }
     } catch (error) {
       console.error('Failed to save profile:', error)
@@ -165,7 +166,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-white lg:pl-64 p-8 pt-20 lg:pt-8">
         <div className="flex items-center justify-center py-20">
-          <div className="animate-pulse text-red-500">Loading...</div>
+          <div className="animate-pulse text-red-500">Loading profile...</div>
         </div>
       </div>
     )
@@ -360,7 +361,7 @@ export default function ProfilePage() {
               {authUser.avatar ? (
                 <img
                   src={authUser.avatar}
-                  alt={profile?.full_name}
+                  alt={profile?.full_name || 'Profile'}
                   className="w-24 h-24 rounded-2xl object-cover shadow-lg"
                 />
               ) : (
@@ -391,7 +392,7 @@ export default function ProfilePage() {
               {profile?.phone && <p className="text-slate-500 text-sm">{profile.phone}</p>}
             </div>
             <div className="flex flex-col gap-2 w-full sm:w-auto">
-              <div className={'px-4 py-2 rounded-xl text-sm font-semibold border text-center ' + (profile?.is_available ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200')}>
+              <div className={`px-4 py-2 rounded-xl text-sm font-semibold border text-center ${profile?.is_available ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}`}>
                 {profile?.is_available ? 'Available to Donate' : 'Not Available'}
               </div>
               <button
@@ -456,11 +457,11 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-4">
                     <span className="text-slate-900 font-medium">{donation.units_donated} unit(s)</span>
-                    <span className={'px-3 py-1 rounded-full text-xs font-bold uppercase ' + (
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
                       donation.status === 'completed' ? 'bg-green-100 text-green-700' :
                       donation.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
                       'bg-slate-200 text-slate-600'
-                    )}>
+                    }`}>
                       {donation.status}
                     </span>
                   </div>
