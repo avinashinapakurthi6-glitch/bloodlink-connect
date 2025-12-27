@@ -95,7 +95,7 @@ export default function ProfilePage() {
         setShowSetup(false)
 
         // Fetch donations in parallel if profile exists
-        fetch(`/api/donations?donor_id=${data.profile.id}`)
+        fetch('/api/donations?donor_id=' + data.profile.id)
           .then(res => res.json())
           .then(data => setDonations(data.donations || []))
           .catch(err => console.error('Donations fetch error:', err))
@@ -122,12 +122,12 @@ export default function ProfilePage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: window.location.origin + '/auth/callback'
       }
     })
     if (error) {
       console.error('Sign in error:', error.message)
-      alert(`Sign in error: ${error.message}`)
+      alert('Sign in error: ' + error.message)
     }
   }
 
@@ -380,18 +380,18 @@ export default function ProfilePage() {
                 {profile?.blood_type && (
                   <span 
                     className="px-3 py-1 rounded-full text-sm font-bold"
-                    style={{ backgroundColor: `${BLOOD_COLORS[profile.blood_type]}15`, color: BLOOD_COLORS[profile.blood_type] }}
+                    style={{ backgroundColor: BLOOD_COLORS[profile.blood_type] + '15', color: BLOOD_COLORS[profile.blood_type] }}
                   >
                     {profile.blood_type}
                   </span>
                 )}
               </div>
-              <p className="text-slate-600 font-medium">{profile?.city}{profile?.state ? `, ${profile.state}` : ''}</p>
+              <p className="text-slate-600 font-medium">{profile?.city}{profile?.state ? ', ' + profile.state : ''}</p>
               <p className="text-slate-500 text-sm">{authUser.email}</p>
               {profile?.phone && <p className="text-slate-500 text-sm">{profile.phone}</p>}
             </div>
             <div className="flex flex-col gap-2 w-full sm:w-auto">
-              <div className={`px-4 py-2 rounded-xl text-sm font-semibold border text-center ${profile?.is_available ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'}`}>
+              <div className={'px-4 py-2 rounded-xl text-sm font-semibold border text-center ' + (profile?.is_available ? 'bg-green-50 text-green-700 border-green-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200')}>
                 {profile?.is_available ? 'Available to Donate' : 'Not Available'}
               </div>
               <button
@@ -456,11 +456,11 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-4">
                     <span className="text-slate-900 font-medium">{donation.units_donated} unit(s)</span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                    <span className={'px-3 py-1 rounded-full text-xs font-bold uppercase ' + (
                       donation.status === 'completed' ? 'bg-green-100 text-green-700' :
                       donation.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
                       'bg-slate-200 text-slate-600'
-                    }`}>
+                    )}>
                       {donation.status}
                     </span>
                   </div>

@@ -33,7 +33,7 @@ export default function CertificatesPage() {
   }
 
     return (
-      <div className="min-h-screen bg-white pl-72 p-8">
+      <div className="min-h-screen bg-white lg:pl-64 p-4 sm:p-8 pt-20 lg:pt-8">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-slate-900 mb-2">Donation Certificates</h1>
