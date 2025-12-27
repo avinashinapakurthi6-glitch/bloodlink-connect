@@ -7,12 +7,15 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') || '/profile'
 
   if (code) {
+    console.log('Exchanging code for session:', code)
     const supabase = await createSupabaseServerClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
+      console.log('Session exchanged successfully')
       return NextResponse.redirect(`${origin}${next}`)
     }
+    console.error('Auth error in callback:', error)
   }
 
   return NextResponse.redirect(`${origin}/auth/error`)
