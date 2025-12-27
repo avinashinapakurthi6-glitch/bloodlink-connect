@@ -19,6 +19,11 @@ interface DonorMapProps {
   onMarkerClick?: (donor: Donor) => void
 }
 
+const BLOOD_COLORS: Record<string, string> = {
+  'A+': '#ef4444', 'A-': '#f97316', 'B+': '#eab308', 'B-': '#22c55e',
+  'AB+': '#3b82f6', 'AB-': '#8b5cf6', 'O+': '#ec4899', 'O-': '#06b6d4'
+}
+
 export default function DonorMap({ donors, center, onMarkerClick }: DonorMapProps) {
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
