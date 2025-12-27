@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       'last_donation_date', 'latitude', 'longitude'
     ].join(',')
 
-    let query = supabase.from('users').select(publicColumns).eq('is_donor', true)
+    let query = supabaseAdmin.from('users').select(publicColumns).eq('is_donor', true)
     
     if (bloodType) query = query.eq('blood_type', bloodType)
     if (city) query = query.ilike('city', `%${city}%`)
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { data, error } = await supabase.from('users').insert({ 
+    const { data, error } = await supabaseAdmin.from('users').insert({ 
       ...body, 
       auth_id: user.id,
       email: user.email,
