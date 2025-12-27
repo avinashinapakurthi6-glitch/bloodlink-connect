@@ -65,7 +65,7 @@ export default function ProfilePage() {
     is_available: true
   })
 
-  const fetchProfile = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await fetch('/api/profile')
       const data = await res.json()
@@ -74,29 +74,37 @@ export default function ProfilePage() {
         setAuthUser(null)
         setProfile(null)
         setShowSetup(false)
+        setLoading(false)
+        return
+      }
+
+      setAuthUser(data.user)
+      if (data.profile) {
+        setProfile(data.profile)
+        setFormData({
+          full_name: data.profile.full_name || data.user.name || '',
+          phone: data.profile.phone || '',
+          blood_type: data.profile.blood_type || '',
+          city: data.profile.city || '',
+          state: data.profile.state || '',
+          address: data.profile.address || '',
+          date_of_birth: data.profile.date_of_birth || '',
+          gender: data.profile.gender || '',
+          is_available: data.profile.is_available ?? true
+        })
+        setShowSetup(false)
+
+        // Fetch donations in parallel if profile exists
+        fetch(`/api/donations?donor_id=${data.profile.id}`)
+          .then(res => res.json())
+          .then(data => setDonations(data.donations || []))
+          .catch(err => console.error('Donations fetch error:', err))
       } else {
-        setAuthUser(data.user)
-        if (data.profile) {
-          setProfile(data.profile)
-          setFormData({
-            full_name: data.profile.full_name || data.user.name || '',
-            phone: data.profile.phone || '',
-            blood_type: data.profile.blood_type || '',
-            city: data.profile.city || '',
-            state: data.profile.state || '',
-            address: data.profile.address || '',
-            date_of_birth: data.profile.date_of_birth || '',
-            gender: data.profile.gender || '',
-            is_available: data.profile.is_available ?? true
-          })
-          setShowSetup(false)
-        } else {
-          setShowSetup(true)
-          setFormData(prev => ({
-            ...prev,
-            full_name: data.user.name || ''
-          }))
-        }
+        setShowSetup(true)
+        setFormData(prev => ({
+          ...prev,
+          full_name: data.user.name || ''
+        }))
       }
     } catch (error) {
       console.error('Failed to fetch profile:', error)
@@ -105,26 +113,9 @@ export default function ProfilePage() {
     }
   }, [])
 
-  const fetchDonations = useCallback(async () => {
-    if (!profile?.id) return
-    try {
-      const res = await fetch(`/api/donations?donor_id=${profile.id}`)
-      const data = await res.json()
-      setDonations(data.donations || [])
-    } catch (error) {
-      console.error('Failed to fetch donations:', error)
-    }
-  }, [profile?.id])
-
   useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile])
-
-  useEffect(() => {
-    if (profile?.id) {
-      fetchDonations()
-    }
-  }, [profile?.id, fetchDonations])
+    fetchData()
+  }, [fetchData])
 
   const signInWithGoogle = async () => {
     const supabase = createSupabaseBrowserClient()
