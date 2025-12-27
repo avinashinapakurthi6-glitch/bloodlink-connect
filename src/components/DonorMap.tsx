@@ -1,7 +1,7 @@
 "use client"
 
-import { APIProvider, Map, AdvancedMarker, InfoWindow, useAdvancedMarkerRef } from '@vis.gl/react-google-maps'
-import { useState } from 'react'
+import { APIProvider, Map, AdvancedMarker, InfoWindow, useAdvancedMarkerRef, useMap } from '@vis.gl/react-google-maps'
+import { useState, useEffect } from 'react'
 
 interface Donor {
   id: string
@@ -23,64 +23,93 @@ const BLOOD_COLORS: Record<string, string> = {
 }
 
 export default function DonorMap({ donors }: DonorMapProps) {
+  return (
+    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
+      <MapContent donors={donors} />
+    </APIProvider>
+  )
+}
+
+function MapContent({ donors }: DonorMapProps) {
+  const map = useMap()
   const [selectedDonorId, setSelectedDonorId] = useState<string | null>(null)
   
   const selectedDonor = donors.find(d => d.id === selectedDonorId)
-  
-  // Filter donors with valid coordinates
   const validDonors = donors.filter(d => d.latitude && d.longitude)
   
-  // Default center (India) if no donors
   const defaultCenter = { lat: 20.5937, lng: 78.9629 }
-  const center = validDonors.length > 0 
+  const initialCenter = validDonors.length > 0 
     ? { lat: Number(validDonors[0].latitude), lng: Number(validDonors[0].longitude) }
     : defaultCenter
 
-  return (
-    <div className="h-[500px] w-full rounded-2xl overflow-hidden border border-slate-200 mb-8 shadow-sm">
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
-        <Map
-          defaultCenter={center}
-          defaultZoom={5}
-          mapId="DONOR_MAP_ID"
-          gestureHandling={'greedy'}
-          disableDefaultUI={false}
-        >
-          {validDonors.map(donor => (
-            <DonorMarker 
-              key={donor.id} 
-              donor={donor} 
-              onClick={() => setSelectedDonorId(donor.id)}
-            />
-          ))}
+  useEffect(() => {
+    if (!map || validDonors.length === 0) return
 
-          {selectedDonor && (
-            <InfoWindow
-              position={{ lat: Number(selectedDonor.latitude), lng: Number(selectedDonor.longitude) }}
-              onCloseClick={() => setSelectedDonorId(null)}
-            >
-              <div className="p-2 min-w-[150px]">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-slate-900">{selectedDonor.full_name}</span>
-                  <span 
-                    className="px-2 py-0.5 rounded text-[10px] font-bold"
-                    style={{ backgroundColor: `${BLOOD_COLORS[selectedDonor.blood_type]}15`, color: BLOOD_COLORS[selectedDonor.blood_type] }}
-                  >
-                    {selectedDonor.blood_type}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mb-2">{selectedDonor.city}</p>
-                <div className="flex items-center gap-1">
-                  <div className={`w-2 h-2 rounded-full ${selectedDonor.is_available ? 'bg-green-500' : 'bg-yellow-500'}`} />
-                  <span className="text-[10px] text-slate-600">
-                    {selectedDonor.is_available ? 'Available' : 'Unavailable'}
-                  </span>
-                </div>
+    const bounds = new google.maps.LatLngBounds()
+    validDonors.forEach(donor => {
+      bounds.extend({ lat: Number(donor.latitude), lng: Number(donor.longitude) })
+    })
+
+    if (validDonors.length === 1) {
+      map.setCenter(bounds.getCenter())
+      map.setZoom(12)
+    } else {
+      map.fitBounds(bounds, 50)
+    }
+  }, [map, donors])
+
+  return (
+    <div className="h-[500px] w-full rounded-2xl overflow-hidden border border-slate-200 mb-8 shadow-sm relative">
+      <Map
+        defaultCenter={initialCenter}
+        defaultZoom={5}
+        mapId="DONOR_MAP_ID"
+        gestureHandling={'greedy'}
+        disableDefaultUI={false}
+      >
+        {validDonors.map(donor => (
+          <DonorMarker 
+            key={donor.id} 
+            donor={donor} 
+            onClick={() => setSelectedDonorId(donor.id)}
+          />
+        ))}
+
+        {selectedDonor && (
+          <InfoWindow
+            position={{ lat: Number(selectedDonor.latitude), lng: Number(selectedDonor.longitude) }}
+            onCloseClick={() => setSelectedDonorId(null)}
+          >
+            <div className="p-2 min-w-[150px]">
+              <div className="flex items-center justify-between mb-2 gap-4">
+                <span className="font-bold text-slate-900 whitespace-nowrap">{selectedDonor.full_name}</span>
+                <span 
+                  className="px-2 py-0.5 rounded text-[10px] font-bold"
+                  style={{ backgroundColor: `${BLOOD_COLORS[selectedDonor.blood_type]}15`, color: BLOOD_COLORS[selectedDonor.blood_type] }}
+                >
+                  {selectedDonor.blood_type}
+                </span>
               </div>
-            </InfoWindow>
-          )}
-        </Map>
-      </APIProvider>
+              <p className="text-xs text-slate-500 mb-2">{selectedDonor.city}</p>
+              <div className="flex items-center gap-1">
+                <div className={`w-2 h-2 rounded-full ${selectedDonor.is_available ? 'bg-green-500' : 'bg-yellow-500'}`} />
+                <span className="text-[10px] text-slate-600">
+                  {selectedDonor.is_available ? 'Available' : 'Recently Donated'}
+                </span>
+              </div>
+            </div>
+          </InfoWindow>
+        )}
+      </Map>
+      
+      {validDonors.length === 0 && (
+        <div className="absolute inset-0 bg-slate-50/80 backdrop-blur-sm flex items-center justify-center z-10">
+          <div className="text-center p-6">
+            <p className="text-slate-600 font-medium">No donors with location data found</p>
+            <p className="text-sm text-slate-400">Try adjusting your filters or search city</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
