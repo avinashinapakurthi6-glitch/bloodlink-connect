@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import DonorMap from '@/components/DonorMap'
 
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 const BLOOD_COLORS: Record<string, string> = {
@@ -17,6 +18,8 @@ interface Donor {
   is_available: boolean
   total_donations: number
   last_donation_date: string | null
+  latitude: number
+  longitude: number
   distance_km?: number
 }
 
