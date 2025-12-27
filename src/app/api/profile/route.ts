@@ -48,6 +48,19 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     
+    // Only allow updating specific fields to prevent malicious overrides
+    const allowedFields = [
+      'full_name', 'phone', 'blood_type', 'city', 'state', 
+      'address', 'date_of_birth', 'gender', 'is_available'
+    ]
+    
+    const filteredBody: Record<string, any> = {}
+    allowedFields.forEach(field => {
+      if (body[field] !== undefined) {
+        filteredBody[field] = body[field]
+      }
+    })
+
     const { data: existing } = await supabaseAdmin
       .from('users')
       .select('id')
@@ -59,8 +72,9 @@ export async function POST(request: NextRequest) {
       const { data, error } = await supabaseAdmin
         .from('users')
         .update({
-          ...body,
+          ...filteredBody,
           email: user.email,
+          is_donor: true, // Always true if they have a profile
           updated_at: new Date().toISOString()
         })
         .eq('auth_id', user.id)
@@ -73,11 +87,11 @@ export async function POST(request: NextRequest) {
       const { data, error } = await supabaseAdmin
         .from('users')
         .insert({
-          ...body,
+          ...filteredBody,
           auth_id: user.id,
           email: user.email,
           is_donor: true,
-          is_available: true,
+          is_available: filteredBody.is_available ?? true,
           total_donations: 0,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
