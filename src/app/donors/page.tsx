@@ -38,6 +38,8 @@ interface RegisterForm {
   gender: string
   city: string
   address: string
+  latitude?: number
+  longitude?: number
 }
 
 export default function DonorsPage() {
