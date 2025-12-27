@@ -3,6 +3,16 @@
 import { useEffect, useState, useCallback } from 'react'
 import DonorMap from '@/components/DonorMap'
 import { PlaceAutocomplete } from '@/components/PlaceAutocomplete'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 const BLOOD_COLORS: Record<string, string> = {
@@ -65,6 +75,13 @@ export default function DonorsPage() {
     city: '',
     address: ''
   })
+
+  // Contact Modal State
+  const [selectedDonor, setSelectedDonor] = useState<Donor | null>(null)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [contactMessage, setContactMessage] = useState('')
+  const [requesterName, setRequesterName] = useState('')
+  const [sending, setSending] = useState(false)
 
   const captureLocation = () => {
     setLocationCapturing(true)
@@ -205,6 +222,45 @@ export default function DonorsPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleContactDonor = (donor: Donor) => {
+    setSelectedDonor(donor)
+    setContactMessage(`Hi ${donor.full_name}, I am in urgent need of ${donor.blood_type} blood. Are you available to donate?`)
+    setIsContactModalOpen(true)
+  }
+
+  const sendContactRequest = async () => {
+    if (!selectedDonor) return
+    if (!requesterName) {
+      toast.error("Please enter your name")
+      return
+    }
+
+    setSending(true)
+    try {
+      const res = await fetch('/api/donors/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          donor_id: selectedDonor.id,
+          message: contactMessage,
+          requester_name: requesterName
+        })
+      })
+
+      if (!res.ok) throw new Error('Failed to notify donor')
+
+      toast.success(`Request sent to ${selectedDonor.full_name}!`)
+      setIsContactModalOpen(false)
+      setContactMessage('')
+      setRequesterName('')
+    } catch (error) {
+      console.error('Contact error:', error)
+      toast.error("Failed to send request. Please try again.")
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -449,7 +505,7 @@ export default function DonorsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {(mode === 'match' ? matchResult?.matches : donors)?.map(donor => (
-              <DonorCard key={donor.id} donor={donor} />
+              <DonorCard key={donor.id} donor={donor} onContact={() => handleContactDonor(donor)} />
             ))}
             {((mode === 'match' ? matchResult?.matches : donors)?.length || 0) === 0 && (
               <div className="col-span-full text-center py-20 text-slate-500">
@@ -459,11 +515,55 @@ export default function DonorsPage() {
           </div>
         )}
       </div>
+
+      <Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Contact {selectedDonor?.full_name}</DialogTitle>
+            <DialogDescription>
+              Send a donation request to this donor. They will receive a notification immediately.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Your Name</label>
+              <input 
+                type="text" 
+                value={requesterName}
+                onChange={(e) => setRequesterName(e.target.value)}
+                placeholder="Enter your name"
+                className="w-full px-4 py-2 rounded-lg border border-slate-200 outline-none focus:border-red-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Message</label>
+              <textarea 
+                rows={4}
+                value={contactMessage}
+                onChange={(e) => setContactMessage(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-slate-200 outline-none focus:border-red-500 resize-none"
+              />
+            </div>
+            {selectedDonor?.phone && (
+              <div className="p-3 bg-blue-50 text-blue-700 rounded-lg text-sm flex justify-between items-center">
+                <span>Phone: {selectedDonor.phone}</span>
+                <a href={`tel:${selectedDonor.phone}`} className="font-bold underline">Call Now</a>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsContactModalOpen(false)}>Cancel</Button>
+            <Button className="bg-red-500 hover:bg-red-600" onClick={sendContactRequest} disabled={sending}>
+              {sending ? "Sending..." : "Send Request"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
 
-function DonorCard({ donor }: { donor: Donor }) {
+function DonorCard({ donor, onContact }: { donor: Donor, onContact: () => void }) {
   return (
     <div className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-red-500/50 transition-all hover:shadow-lg hover:shadow-red-500/5">
       <div className="flex items-start justify-between mb-4">
@@ -499,7 +599,10 @@ function DonorCard({ donor }: { donor: Donor }) {
       </div>
 
       {donor.is_available && (
-        <button className="mt-4 w-full py-2 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition-colors">
+        <button 
+          onClick={onContact}
+          className="mt-4 w-full py-2 rounded-xl bg-red-50 text-red-600 font-medium hover:bg-red-100 transition-colors"
+        >
           Contact Donor
         </button>
       )}
