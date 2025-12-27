@@ -349,156 +349,29 @@ export default function DonorsPage() {
           )}
 
           {mode === 'register' ? (
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 max-w-2xl">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Register as a Blood Donor</h2>
-            
-            {registerSuccess && (
-              <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-700">
-                Registration successful! Thank you for becoming a donor.
+            <div className="bg-white rounded-2xl p-12 border border-slate-200 max-w-2xl text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-50 text-red-500 mb-6">
+                <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
               </div>
-            )}
-            
-            {registerError && (
-              <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700">
-                {registerError}
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">Secure Donor Registration</h2>
+              <p className="text-slate-600 mb-8 text-lg">
+                To ensure a safe and reliable network, donor registration now requires a verified Google account. This helps us verify identities and protect your private information.
+              </p>
+              <div className="space-y-4">
+                <Button 
+                  onClick={() => window.location.href = '/profile'}
+                  className="w-full py-6 text-lg bg-red-500 hover:bg-red-600 rounded-2xl"
+                >
+                  Go to Profile to Register
+                </Button>
+                <p className="text-sm text-slate-500">
+                  You'll be able to set your blood type, location, and availability there.
+                </p>
               </div>
-            )}
-            
-            <form onSubmit={handleRegister} className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
-                  <input
-                    type="text"
-                    name="full_name"
-                    value={formData.full_name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                    placeholder="Enter your email"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Phone *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Blood Type *</label>
-                  <select
-                    name="blood_type"
-                    value={formData.blood_type}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                  >
-                    <option value="">Select blood type</option>
-                    {BLOOD_TYPES.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Date of Birth</label>
-                  <input
-                    type="date"
-                    name="date_of_birth"
-                    value={formData.date_of_birth}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Gender</label>
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">City *</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                    placeholder="Enter your city"
-                  />
-                </div>
-                
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Address</label>
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                      placeholder="Enter your address"
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${formData.latitude ? 'bg-green-500' : 'bg-slate-300'}`} />
-                    <span className="text-sm text-slate-600">
-                      {formData.latitude 
-                        ? `Coordinates captured: ${formData.latitude.toFixed(4)}, ${formData.longitude?.toFixed(4)}`
-                        : 'Capture your precise location for easier discovery'
-                      }
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={captureLocation}
-                    disabled={locationCapturing}
-                    className="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
-                  >
-                    {locationCapturing ? 'Capturing...' : formData.latitude ? 'Update Location' : 'Use My Location'}
-                  </button>
-                </div>
-
-              
-              <button
-                type="submit"
-                disabled={registering}
-                className="w-full py-4 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {registering ? 'Registering...' : 'Register as Donor'}
-              </button>
-            </form>
-          </div>
-        ) : loading ? (
+            </div>
+          ) : loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-pulse text-red-500">Loading donors...</div>
           </div>
