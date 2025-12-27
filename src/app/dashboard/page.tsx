@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="h-screen bg-white pl-72 p-8">
+      <div className="h-screen bg-white lg:pl-64 p-8 pt-20 lg:pt-8">
         <div className="flex items-center justify-center h-full">
           <div className="animate-pulse text-red-500 text-xl">Loading dashboard...</div>
         </div>
@@ -67,14 +67,14 @@ export default function DashboardPage() {
   const pieData = inventoryData.map(d => ({ name: d.type, value: d.units }))
 
   return (
-    <div className="h-screen bg-white pl-72 p-8 overflow-y-auto">
+    <div className="h-screen bg-white lg:pl-64 p-4 sm:p-8 pt-20 lg:pt-8 overflow-y-auto">
       <div className="max-w-7xl mx-auto pb-8">
-        <div className="mb-8">
+        <div className="mb-8 text-center lg:text-left">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Impact Dashboard</h1>
           <p className="text-slate-500">Real-time blood donation statistics and analytics</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard icon="👥" label="Total Donors" value={data?.stats.totalDonors || 0} color="from-red-500 to-red-600" />
           <StatCard icon="💉" label="Total Donations" value={data?.stats.totalDonations || 0} color="from-orange-500 to-orange-600" />
           <StatCard icon="🩸" label="Units Collected" value={data?.stats.totalUnits || 0} color="from-pink-500 to-pink-600" />
