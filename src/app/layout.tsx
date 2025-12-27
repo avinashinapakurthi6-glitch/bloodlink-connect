@@ -6,6 +6,7 @@ import ErrorReporter from "@/components/ErrorReporter";
 import Script from "next/script";
 import SidebarNavigation from "@/components/sections/sidebar-navigation";
 import FloatingChatButton from "@/components/sections/floating-chat-button";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
