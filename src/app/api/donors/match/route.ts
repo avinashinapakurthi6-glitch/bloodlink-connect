@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 
 const COMPATIBLE_BLOOD_TYPES: Record<string, string[]> = {
   'A+': ['A+', 'A-', 'O+', 'O-'],
@@ -33,9 +33,15 @@ export async function POST(request: NextRequest) {
 
     const compatibleTypes = COMPATIBLE_BLOOD_TYPES[blood_type] || [blood_type]
 
-    const { data: donors, error } = await supabase
+    const publicColumns = [
+      'id', 'full_name', 'blood_type', 'city', 'state', 
+      'is_donor', 'is_available', 'total_donations', 
+      'last_donation_date', 'latitude', 'longitude'
+    ].join(',')
+
+    const { data: donors, error } = await supabaseAdmin
       .from('users')
-      .select('*')
+      .select(publicColumns)
       .eq('is_donor', true)
       .eq('is_available', true)
       .in('blood_type', compatibleTypes)
