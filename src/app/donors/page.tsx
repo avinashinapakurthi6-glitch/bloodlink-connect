@@ -50,6 +50,7 @@ export default function DonorsPage() {
   const [searchBloodType, setSearchBloodType] = useState('')
   const [searchCity, setSearchCity] = useState('')
   const [registering, setRegistering] = useState(false)
+  const [locationCapturing, setLocationCapturing] = useState(false)
   const [registerSuccess, setRegisterSuccess] = useState(false)
   const [registerError, setRegisterError] = useState('')
   const [formData, setFormData] = useState<RegisterForm>({
@@ -62,6 +63,31 @@ export default function DonorsPage() {
     city: '',
     address: ''
   })
+
+  const captureLocation = () => {
+    setLocationCapturing(true)
+    if (!navigator.geolocation) {
+      setRegisterError('Geolocation is not supported by your browser')
+      setLocationCapturing(false)
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setFormData(prev => ({
+          ...prev,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        }))
+        setLocationCapturing(false)
+      },
+      (error) => {
+        console.error('Geolocation error:', error)
+        setRegisterError('Failed to get your location. Please enter it manually or try again.')
+        setLocationCapturing(false)
+      }
+    )
+  }
 
   useEffect(() => {
     if (mode === 'list') {
