@@ -8,7 +8,13 @@ export async function GET(request: NextRequest) {
     const city = searchParams.get('city')
     const available = searchParams.get('available')
 
-    let query = supabase.from('users').select('*').eq('is_donor', true)
+    const publicColumns = [
+      'id', 'full_name', 'blood_type', 'city', 'state', 
+      'is_donor', 'is_available', 'total_donations', 
+      'last_donation_date', 'latitude', 'longitude'
+    ].join(',')
+
+    let query = supabase.from('users').select(publicColumns).eq('is_donor', true)
     
     if (bloodType) query = query.eq('blood_type', bloodType)
     if (city) query = query.ilike('city', `%${city}%`)
