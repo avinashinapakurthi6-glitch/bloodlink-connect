@@ -15,22 +15,19 @@ interface Donor {
 
 interface DonorMapProps {
   donors: Donor[]
+  center?: { lat: number; lng: number }
+  onMarkerClick?: (donor: Donor) => void
 }
 
-const BLOOD_COLORS: Record<string, string> = {
-  'A+': '#ef4444', 'A-': '#f97316', 'B+': '#eab308', 'B-': '#22c55e',
-  'AB+': '#3b82f6', 'AB-': '#8b5cf6', 'O+': '#ec4899', 'O-': '#06b6d4'
-}
-
-export default function DonorMap({ donors }: DonorMapProps) {
+export default function DonorMap({ donors, center, onMarkerClick }: DonorMapProps) {
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
-      <MapContent donors={donors} />
+      <MapContent donors={donors} center={center} onMarkerClick={onMarkerClick} />
     </APIProvider>
   )
 }
 
-function MapContent({ donors }: DonorMapProps) {
+function MapContent({ donors, center, onMarkerClick }: DonorMapProps) {
   const map = useMap()
   const [selectedDonorId, setSelectedDonorId] = useState<string | null>(null)
   
@@ -38,12 +35,20 @@ function MapContent({ donors }: DonorMapProps) {
   const validDonors = donors.filter(d => d.latitude && d.longitude)
   
   const defaultCenter = { lat: 20.5937, lng: 78.9629 }
-  const initialCenter = validDonors.length > 0 
+  const initialCenter = center || (validDonors.length > 0 
     ? { lat: Number(validDonors[0].latitude), lng: Number(validDonors[0].longitude) }
-    : defaultCenter
+    : defaultCenter)
 
   useEffect(() => {
-    if (!map || validDonors.length === 0) return
+    if (!map) return
+
+    if (center) {
+      map.panTo(center)
+      map.setZoom(13)
+      return
+    }
+
+    if (validDonors.length === 0) return
 
     const bounds = new google.maps.LatLngBounds()
     validDonors.forEach(donor => {
@@ -56,7 +61,7 @@ function MapContent({ donors }: DonorMapProps) {
     } else {
       map.fitBounds(bounds, 50)
     }
-  }, [map, donors])
+  }, [map, donors, center])
 
   return (
     <div className="h-[500px] w-full rounded-2xl overflow-hidden border border-slate-200 mb-8 shadow-sm relative">
@@ -71,7 +76,10 @@ function MapContent({ donors }: DonorMapProps) {
           <DonorMarker 
             key={donor.id} 
             donor={donor} 
-            onClick={() => setSelectedDonorId(donor.id)}
+            onClick={() => {
+              setSelectedDonorId(donor.id)
+              onMarkerClick?.(donor)
+            }}
           />
         ))}
 
