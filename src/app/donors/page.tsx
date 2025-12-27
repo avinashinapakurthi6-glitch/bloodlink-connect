@@ -190,53 +190,57 @@ export default function DonorsPage() {
           </button>
         </div>
 
-        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-6">
-          <div className="flex flex-wrap gap-4">
-            <select
-              value={searchBloodType}
-              onChange={e => setSearchBloodType(e.target.value)}
-              className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none"
-            >
-              <option value="">All Blood Types</option>
-              {BLOOD_TYPES.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-
-            {mode === 'list' && (
-              <input
-                type="text"
-                placeholder="Filter by city..."
-                value={searchCity}
-                onChange={e => setSearchCity(e.target.value)}
-                className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none flex-1 min-w-[200px]"
-              />
-            )}
-
-            {mode === 'match' && (
-              <button
-                onClick={findMatches}
-                disabled={!searchBloodType || loading}
-                className="px-6 py-3 rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-6">
+            <div className="flex flex-wrap gap-4">
+              <select
+                value={searchBloodType}
+                onChange={e => setSearchBloodType(e.target.value)}
+                className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none"
               >
-                Find Compatible Donors
-              </button>
+                <option value="">All Blood Types</option>
+                {BLOOD_TYPES.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+
+              {mode === 'list' && (
+                <input
+                  type="text"
+                  placeholder="Filter by city..."
+                  value={searchCity}
+                  onChange={e => setSearchCity(e.target.value)}
+                  className="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:border-red-500 outline-none flex-1 min-w-[200px]"
+                />
+              )}
+
+              {mode === 'match' && (
+                <button
+                  onClick={findMatches}
+                  disabled={!searchBloodType || loading}
+                  className="px-6 py-3 rounded-xl bg-red-500 text-white font-medium hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Find Compatible Donors
+                </button>
+              )}
+            </div>
+
+            {mode === 'match' && matchResult && (
+              <div className="mt-4 p-4 rounded-xl bg-white border border-slate-200">
+                <p className="text-slate-700">
+                  Found <span className="text-red-500 font-bold">{matchResult.total}</span> compatible donors for {searchBloodType}
+                </p>
+                <p className="text-sm text-slate-500 mt-1">
+                  Compatible types: {matchResult.compatible_types.join(', ')}
+                </p>
+              </div>
             )}
           </div>
 
-          {mode === 'match' && matchResult && (
-            <div className="mt-4 p-4 rounded-xl bg-white border border-slate-200">
-              <p className="text-slate-700">
-                Found <span className="text-red-500 font-bold">{matchResult.total}</span> compatible donors for {searchBloodType}
-              </p>
-              <p className="text-sm text-slate-500 mt-1">
-                Compatible types: {matchResult.compatible_types.join(', ')}
-              </p>
-            </div>
+          {mode !== 'register' && (
+            <DonorMap donors={mode === 'match' ? (matchResult?.matches || []) : donors} />
           )}
-        </div>
 
-        {mode === 'register' ? (
+          {mode === 'register' ? (
           <div className="bg-white rounded-2xl p-8 border border-slate-200 max-w-2xl">
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Register as a Blood Donor</h2>
             
