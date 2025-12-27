@@ -119,12 +119,16 @@ export default function ProfilePage() {
 
   const signInWithGoogle = async () => {
     const supabase = createSupabaseBrowserClient()
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`
       }
     })
+    if (error) {
+      console.error('Sign in error:', error.message)
+      alert(`Sign in error: ${error.message}`)
+    }
   }
 
   const signOut = async () => {
