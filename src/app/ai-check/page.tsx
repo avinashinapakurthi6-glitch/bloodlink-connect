@@ -62,6 +62,7 @@ export default function AICheckPage() {
     ];
 
     setResult(mockResults[Math.random() > 0.5 ? 0 : 1]);
+    console.log("AI Medical Report Analysis Result:", mockResults);
     setAnalyzing(false);
   };
 
@@ -131,9 +132,9 @@ export default function AICheckPage() {
                 </button>
               )}
             </div>
-          ) : (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className={`p-6 ${result.eligible ? "bg-green-50" : "bg-red-50"}`}>
+            ) : (
+              <div id="ai-check-result" data-testid="ai-check-result" className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className={`p-6 ${result.eligible ? "bg-green-50" : "bg-red-50"}`}>
                 <div className="flex items-center gap-4">
                   {result.eligible ? (
                     <CheckCircle className="h-12 w-12 text-green-600" />

@@ -46,6 +46,8 @@ export default function EligibilityPage() {
   };
 
   const checkEligibility = () => {
+    const result = calculateEligibility();
+    console.log("Health Eligibility Result:", result);
     setShowResult(true);
   };
 
@@ -118,9 +120,9 @@ export default function EligibilityPage() {
                 Check My Eligibility
               </button>
             </>
-          ) : (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
-              {eligible ? (
+            ) : (
+              <div id="eligibility-result" data-testid="eligibility-result" className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center">
+                {eligible ? (
                 <>
                   <div className="h-20 w-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle className="h-10 w-10 text-green-600" />

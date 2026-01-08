@@ -21,25 +21,42 @@ export default function ChatBot({ isOpen, onClose }: { isOpen: boolean; onClose:
     }
   }, [messages]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+    const handleSend = () => {
+      if (!input.trim()) return;
 
-    const userMsg: Message = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
+      const userMsg: Message = { role: "user", content: input };
+      setMessages((prev) => [...prev, userMsg]);
+      setInput("");
 
-    // Simple mock AI response
-    setTimeout(() => {
-      let response = "I'm here to help with your blood donation questions. You can ask about eligibility, nearby centers, or how to request blood.";
-      if (input.toLowerCase().includes("blood type")) {
-        response = "There are 8 main blood types: A+, A-, B+, B-, O+, O-, AB+, and AB-. O- is the universal donor, while AB+ is the universal recipient.";
-      } else if (input.toLowerCase().includes("request")) {
-        response = "To request blood, you can click the 'New Blood Request' button on the dashboard or trigger an SOS in case of emergencies.";
-      }
-      
-      setMessages((prev) => [...prev, { role: "assistant", content: response }]);
-    }, 600);
-  };
+        // Improved mock AI response
+        setTimeout(() => {
+          const query = input.toLowerCase();
+          let response = "I'm here to help with your blood donation questions. You can ask about eligibility, nearby centers, or how to request blood.";
+          
+          if (query.includes("blood type")) {
+            response = "There are 8 main blood types: A+, A-, B+, B-, O+, O-, AB+, and AB-. O- is the universal donor, while AB+ is the universal recipient.";
+          } else if (query.includes("request") || query.includes("donation")) {
+            response = "To request blood, you can click the 'New Blood Request' button on the dashboard or use the 'Shortage Alerts' page to notify inventory managers. We'll alert nearby donors immediately.";
+          } else if (query.includes("donor") || query.includes("matching")) {
+            response = "You can find compatible donors in the 'Donor Matching' section. We match donors based on blood type and location proximity. Once matched, you can use the 'Contact' button to reach them.";
+          } else if (query.includes("emergency") || query.includes("urgent")) {
+            response = "Active emergencies are listed in the 'Emergency Responses' section. When you click 'I Can Donate', the patient is immediately notified with your registered contact number.";
+          } else if (query.includes("map") || query.includes("nearby") || query.includes("center") || query.includes("location")) {
+            response = "The 'Map Tracking' page shows nearby blood banks and hospitals. Clicking 'Directions' will open the exact location in Google Maps, and the 'Call' button lets you reach them instantly.";
+          } else if (query.includes("direction") || query.includes("google maps")) {
+            response = "Yes, on both the 'Map Tracking' and 'Donor Matching' pages, you can click the 'Directions' button to open the precise location directly in Google Maps.";
+          } else if (query.includes("alert") || query.includes("shortage")) {
+            response = "The 'Shortage Alerts' page monitors blood stock levels in real-time. If you see a shortage, you can click 'Request Donation' to alert the entire network of donors.";
+          } else if (query.includes("contact") || query.includes("call") || query.includes("phone")) {
+            response = "You can contact donors, hospitals, or emergency patients directly through the platform using the 'Contact' or 'Call' buttons. These will initiate a direct phone call from your device.";
+          } else if (query.includes("help") || query.includes("how to")) {
+            response = "I can guide you through the platform! Try asking about 'how to donate', 'find blood', 'emergency assistance', or 'how directions work'.";
+          }
+        
+        setMessages((prev) => [...prev, { role: "assistant", content: response }]);
+      }, 600);
+    };
+
 
   if (!isOpen) return null;
 

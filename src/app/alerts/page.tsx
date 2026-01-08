@@ -5,6 +5,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import ChatBotTrigger from "@/components/ui/ChatBotTrigger";
 import { supabase } from "@/lib/supabase/client";
 import { BellRing, AlertTriangle, Droplet, MapPin, TrendingDown } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 interface Alert {
   blood_type: string;
@@ -61,8 +62,17 @@ export default function AlertsPage() {
     }
   };
 
+  const handleRequestDonation = (alert: Alert) => {
+    toast.success(`Donation request sent for ${alert.blood_type} at ${alert.location}! Inventory managers and nearby donors have been notified.`, {
+      duration: 5000,
+    });
+    // Simulate notification system
+    console.log(`SHORTAGE_ALERT_REQUEST: Requesting ${alert.blood_type} donation at ${alert.location}. Notifying network...`);
+  };
+
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
+      <Toaster position="top-center" />
       <Sidebar />
       <div className="flex-1 ml-[280px]">
         <header className="h-16 border-b border-gray-200 bg-white flex items-center px-8 sticky top-0 z-10">
@@ -163,9 +173,13 @@ export default function AlertsPage() {
                         </div>
                       </div>
                     </div>
-                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors">
-                      Request Donation
-                    </button>
+                      <button 
+                        onClick={() => handleRequestDonation(alert)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors"
+                      >
+                        Request Donation
+                      </button>
+
                   </div>
                 </div>
               ))}

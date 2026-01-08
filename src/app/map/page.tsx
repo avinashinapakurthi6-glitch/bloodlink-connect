@@ -5,6 +5,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import ChatBotTrigger from "@/components/ui/ChatBotTrigger";
 import { supabase } from "@/lib/supabase/client";
 import { MapPin, Navigation, Hospital, Droplet, Phone } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 interface Location {
   id: string;
@@ -36,6 +37,7 @@ export default function MapPage() {
 
   return (
     <div className="flex min-h-screen bg-[#F9FAFB]">
+      <Toaster position="top-center" />
       <Sidebar />
       <div className="flex-1 ml-[280px]">
         <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-8 sticky top-0 z-10">
@@ -152,28 +154,25 @@ export default function MapPage() {
                       <p className="text-sm text-gray-500">{selectedLocation.address}</p>
                     </div>
                   </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          const url = `https://www.google.com/maps/dir/?api=1&destination=${selectedLocation.lat},${selectedLocation.lng}`;
-                          window.parent.postMessage({ type: "OPEN_EXTERNAL_URL", data: { url } }, "*");
-                        }}
-                        className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2"
-                      >
-                        <Navigation className="h-4 w-4" /> Directions
-                      </button>
-                      {selectedLocation.phone && (
-                        <button
-                          onClick={() => {
-                            const url = `tel:${selectedLocation.phone}`;
-                            window.parent.postMessage({ type: "OPEN_EXTERNAL_URL", data: { url } }, "*");
-                          }}
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors flex items-center gap-2"
-                        >
-                          <Phone className="h-4 w-4" /> Call
-                        </button>
-                      )}
-                    </div>
+                            <div className="flex gap-2">
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedLocation.address)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2"
+                              >
+                                <Navigation className="h-4 w-4" /> Directions
+                              </a>
+                              {selectedLocation.phone && (
+                                <a
+                                  href={`tel:${selectedLocation.phone}`}
+                                  className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors flex items-center gap-2"
+                                >
+                                  <Phone className="h-4 w-4" /> Call
+                                </a>
+                              )}
+                            </div>
+
                 </div>
                 {selectedLocation.blood_types && (
                   <div className="mt-4 pt-4 border-t border-gray-100">
